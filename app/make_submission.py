@@ -1,12 +1,11 @@
-def submission(X_test_id, y_pred):
-    with open ("../data/submission.csv", "w") as file:
+def submission_file(X_test_id, y_pred):
+    with open('./submission.csv', 'w') as writer:
         n = len(y_pred)
-
-        file.write("Id, SalePrice")
-        file.write("\n")
+        
+        writer.write('Id,SalePrice')
+        writer.write('\n')
 
         for i in range(n):
-            line = str(X_test_id[i]) + "," + str(y_pred[i])
-            file.write(line)
-            file.write("\n")
-    print("Successfully created csv file")
+            line = str(X_test_id[i]) + ',' + str(y_pred[i])
+            writer.write(line)
+            writer.write('\n')

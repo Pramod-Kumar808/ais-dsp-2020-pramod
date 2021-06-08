@@ -7,7 +7,7 @@ import pandas as pd
 from app.preprocess import preprocess
 
 
-def inference(models_dir: Path, model_name: str = 'svm',
+def inference(models_dir: Path, model_name: str = 'RandomizedSearchCV',
               data: pd.DataFrame = None, filepath: Path = None) -> np.ndarray:
     if filepath:
         data = pd.read_csv(filepath, index_col='Id')

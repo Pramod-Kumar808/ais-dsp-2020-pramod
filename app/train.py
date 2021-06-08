@@ -22,7 +22,7 @@ Random_grid = {
 
 def train(filepath: Path, models_dir: Path):
     X_train_processed, X_test, y_train, y_test = get_train_data(filepath, models_dir)
-    model = get_fitted_model(X_train_processed, y_train, models_dir, 'RandomizedSearchCV',RandomizedSearchCV,**{'param_distributions': Random_grid, "n_iter" : 40, "cv":6, "verbose":True})
+    model = get_fitted_model(X_train_processed, y_train, models_dir, 'RandomizedSearchCV',RandomizedSearchCV,**{'param_distributions': Random_grid, "n_iter" : 20, "cv":6, "verbose":True})
     y_pred = inference(models_dir, data=X_test)
     rmsle = compute_rmsle(y_test, y_pred)
     return model, rmsle
