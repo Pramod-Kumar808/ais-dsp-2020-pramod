@@ -1,0 +1,4 @@
+artifact_location: file:///C:/Users/npram/Desktop/EPITA/CLASS%20and%20NOTES/SEM2/Data_science_production/dsp-correction/mlruns/1
+experiment_id: '1'
+lifecycle_stage: active
+name: House price prediction data mlflow
