@@ -11,8 +11,26 @@ import json
 import joblib
 import pandas as pd
 import base64
+import urllib.request
 
-model = joblib.load('C:/Users/npram/Desktop/EPITA/CLASS and NOTES/SEM2/Data_science_production/dsp-correction/models/diabetes_model.pkl')
+urllib.request.urlretrieve(
+  'https://0901.static.prezi.com/preview/v2/rfpe76g53rtio7k4dui7yfhwex6jc3sachvcdoaizecfr3dnitcq_3_0.png',
+   "gfg.png")
+
+# from app import about
+from PIL import Image
+st.markdown("<h1 style='text-align: center; color: green;'>EARLY DIABETES DETECTION</h1>", unsafe_allow_html=True)
+image = Image.open('gfg.png')
+st.sidebar.title("Diabetes Detection")
+st.sidebar.success("Dibetes Prediction with The power of **Artificial Intelligence**!")
+st.sidebar.image(image, width=250)
+st.sidebar.subheader('The diabetes dataset:')
+st.sidebar.write("[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html)")
+    
+# app_add.add_app("About-Diabetes", about.app_add)
+
+
+model = joblib.load('C:/Users/npram/Desktop/Github/ais-dsp-2020-pramod/models/diabetes_model.pkl')
 
 
 # Adding an Image 
@@ -37,44 +55,36 @@ st.image(img)
 
 st.header("Diabetes Prediction")
 st.subheader("This website will predict the diabetes for Single Patient from the user input and Multiple Patient from the dataset uploaded from the user....!")
-# st.set_page_config(page_icon= "https://image.shutterstock.com/image-photo/overt-diabetes-you-yes-no-260nw-1187847934.jpg",)
-
-
-#Uploading the csv file
-file = st.file_uploader("Upload the file")
-if file:
-    st.subheader("Dataset View")
-    dataframe = pd.read_csv(file, sep="\t")
-    st.write(dataframe)
+st.warning("This is only for study purpose.....! The prediction are not accurate and not validated by any of them....! This prediction gives the score and For every prediction its says your safe...!")
+host = "http://127.0.0.1:8000"
 
 #User inputs
 def run():
-    st.sidebar.title("User input diabetes prediction for single patient")
-    age = st.sidebar.text_input("Age in years", "59")
+    st.title("User input diabetes prediction for single patient")
+    age = st.text_input("Age in years", "59")
     if (float(age) < 0) or (float(age) > 100):
-        st.sidebar.warning("Your not immortal, Please re-enter")
+        st.warning("Your not immortal, Please re-enter")
 
-    sex = st.sidebar.text_input("Gender", "1")
+    sex = st.text_input("Gender", "1")
     if (float(sex) < 0) or (float(sex) > 2):
-        st.sidebar.warning("Mention 2 for Women and 1 for Men")
+        st.warning("Mention 2 for Women and 1 for Men")
 
-    bmi = st.sidebar.text_input("BMI value", "32.1")
-    if (float(bmi) < 0):
-        st.sidebar.warning("Please enter correct values")
+    bmi = st.text_input("BMI value in (weight in kg/(height in m)^2)", "32.1")
+    if (float(bmi) < 0) or (bmi == None):
+        st.warning("Please enter correct values")
 
-    bp = st.sidebar.text_input("Blood pressure", "101")
-    if (float(bp) < 0):
-        st.sidebar.warning("Please enter correct values")
+    bp = st.text_input("Blood pressure in (mm Hg)", "101")
+    if (float(bp) < 0) or (bp == None):
+        st.warning("Please enter correct values")
 
-    s1 = st.sidebar.text_input("S1 value", "157")
-    s2 = st.sidebar.text_input("S2 value", "92.3")
-    s3 = st.sidebar.text_input("S3 value", "38")
-    s4 = st.sidebar.text_input("S4 value", "4")
-    s5 = st.sidebar.text_input("S5 value", "4.852")
-    s6 = st.sidebar.text_input("S6 value", "87")
-    Y = st.sidebar.text_input("Y", "52")
-# '''
-#     data = {
+    s1 = st.slider("S1 value", 0, 200, 150, 1)
+    s2 = st.slider("S2 value", 0, 200, 93, 1)
+    s3 = st.slider("S3 value", 0, 200, 38, 1)
+    s4 = st.slider("S4 value", 0, 200, 4, 1)
+    s5 = st.slider("S5 value", 0, 200, 4, 1)
+    s6 = st.slider("S6 value", 0, 200, 87, 1)
+    Y = st.slider("Y value", 0, 200, 151, 1)
+# '''#     data = {
 #         "age" : age,
 #         "sex" : sex,
 #         "bmi" : bmi,
@@ -87,9 +97,38 @@ def run():
 #         "s6" : s6
 #     }
 # '''
+     # Run code for the user input
+    if st.button("Singe Predict"):
+        st.info("Prediction for Single patient from the User input")
+        # st.success(f"Result of Patient: {predictions}")
+        connect = f"{host}/Prediction?age={age}&sex={sex}&bmi={bmi}&bp={bp}&s1={s1}&s2={s2}&s3={s3}&s4={s4}&s5={s5}&s6={s6}"
+        predictions = requests.post(connect)
+        st.info(f"Patient Prediction: {predictions.text}")
+        st.success("""# Congratulations . 
+            Based on your responses, we believe that you are not at a risk of being diabetic at present. Staying safe and engaging in a healthy lifestyle are proactive measures that keep diabetes at bay! """)
+        st.balloons()
+        st.markdown(
+            """
+            ## Prevention
+            Simple lifestyle measures have been shown to be effective in preventing or delaying the onset of type 2 diabetes. To help prevent type 2 diabetes and its complications, people should:
+            * achieve and maintain a healthy body weight;
+            * be physically active – doing at least 30 minutes of regular, moderate-intensity activity on most days. More activity is required for weight control;
+            * eat a healthy diet, avoiding sugar and saturated fats; and
+            * avoid tobacco use – smoking increases the risk of diabetes and cardiovascular disease.
+            """)
+    else:
+        print("Please fill the user inputs...!")
+
+
+    #Uploading the csv file
+    file = st.file_uploader("Upload the file")
+    if file:
+        st.subheader("Dataset View")
+        dataframe = pd.read_csv(file, sep="\t")
+        st.write(dataframe)
 
     # Run code thought request post for the csv file
-    host = "http://127.0.0.1:8000"
+  
     if st.button("Multiple Prediction"):
         # response = requests.post("http://127.0.0.1:8000/Predict", json = data)
         # prediction = response.json()
@@ -102,18 +141,15 @@ def run():
             for i in range(5):
                 for j in predictions:
                     st.info(f"Patient {i} results: {predictions[j]}" )
+                    st.success("""# Congratulations . 
+            Based on your responses, we believe that you are not at a risk of being diabetic at present. Staying safe and engaging in a healthy lifestyle are proactive measures that keep diabetes at bay! """)
+                    st.balloons()
         else:
             st.error("Please upload the data")
 
-    # Run code for the user input
-    if st.sidebar.button("Singe Predict"):
-        st.info("Prediction for Single patient from the User input")
-        # st.sidebar.success(f"Result of Patient: {predictions}")
-        connect = f"{host}/Prediction?age={age}&sex={sex}&bmi={bmi}&bp={bp}&s1={s1}&s2={s2}&s3={s3}&s4={s4}&s5={s5}&s6={s6}"
-        predictions = requests.post(connect)
-        st.info(f"Patient Prediction: {predictions.text}")
-    else:
-        print("Please fill the user inputs...!")
+    
+
+   
 
 if __name__ == '__main__':
     run()

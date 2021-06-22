@@ -26,7 +26,7 @@ import joblib
 patient = []
 
 
-model = joblib.load('C:/Users/npram/Desktop/EPITA/CLASS and NOTES/SEM2/Data_science_production/dsp-correction/models/diabetes_model.pkl')
+model = joblib.load('C:/Users/npram/Desktop/Github/ais-dsp-2020-pramod/models/diabetes_model.pkl')
 
 class DiabetesInfo(BaseModel):
     age : int
